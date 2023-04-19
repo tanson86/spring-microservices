@@ -1,0 +1,25 @@
+server:
+  port: 8078
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8080/eureka/
+
+management:
+  tracing:
+    sampling:
+      probablity: 1.0
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: employee-service
+          uri: lb://employee-service
+          predicates:
+            - Path=/emp/**
+        - id: department-service
+          uri: lb://department-service
+          predicates:
+            - Path=/dept/**
