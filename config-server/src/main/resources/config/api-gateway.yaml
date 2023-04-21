@@ -7,6 +7,16 @@ eureka:
       defaultZone: http://localhost:8080/eureka/
 
 management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health
   tracing:
     sampling:
       probablity: 1.0
@@ -19,7 +29,39 @@ spring:
           uri: lb://employee-service
           predicates:
             - Path=/emp/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: employeeServiceCircuitBreaker
+                fallbackUri: forward:/employeeServiceFallBack
         - id: department-service
           uri: lb://department-service
           predicates:
             - Path=/dept/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: departmentServiceCircuitBreaker
+                fallbackUri: forward:/departmentServiceFallBack
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 10
+      failureRateThreshold: 50
+      minimumNumberOfCalls: 5
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      waitDurationInOpenState: 1s
+      slidingWindowSize: 10
+      slidingWindowType: COUNT_BASED
+  instances:
+    employeeServiceCircuitBreaker:
+      baseConfig: default
+    #      registerHealthIndicator: true
+    #      waitDurationInOpenState: 1s
+    departmentServiceCircuitBreaker:
+      baseConfig: default
+#      registerHealthIndicator: true
+#      waitDurationInOpenState: 1s
