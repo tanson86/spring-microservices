@@ -1,12 +1,19 @@
 # spring-microservices
-Spring microservices using api gateway, eureka, zipkin, config server, resilience4j, circuit breaker, jwt
+<b>Spring microservices using api gateway, eureka, zipkin, config server, resilience4j, circuit breaker, jwt</b>
 
+<b>Stat the project in the following sequence</b>
+
+Zipkin server
+Discovery server
+Config Server
+Microservices(Authentication service, Department service, Employee service)
+Api gateway
 
 This project uses the httpexchange for inter micro services communication and also jwt to make sure all the microservices are accessed only by registered users.
 
 api-gateway runs on port 8078 and this is the entry point for all the requests.
 
-step1 : Register the user
+<b>step1 : Register the user</b>
 
 HTTP VERB: POST 
 URL: http://localhost:8078/auth/save 
@@ -17,7 +24,7 @@ JSON Payload:
     "password":""
 }
 
-Step 2: Get the token for registered user
+<b>Step 2: Get the token for registered user</b>
 
 HTTP VERB: POST 
 URL: http://localhost:8078/auth/token 
@@ -27,7 +34,7 @@ JSON Payload:
     "password":""
 }
 
-Step 3: Hit the required microservice via api gateway and pass the token as Bearer
+<b>Step 3: Hit the required microservice via api gateway and pass the token as Bearer</b>
 
 HTTP VERB: POST 
 URL: http://localhost:8078/emp/save
@@ -44,3 +51,5 @@ JSON Payload:
 HTTP VERB: GET 
 Authorisation type: Bearer Token
 URL: localhost:8078/emp/findAll
+
+credits youtube channels: #java techie, #daily code buffer
